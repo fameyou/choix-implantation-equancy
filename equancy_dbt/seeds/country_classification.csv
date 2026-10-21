@@ -1,0 +1,242 @@
+country_code,country_name,entity_type
+ABW,Aruba,territory
+AFG,Afghanistan,country
+AGO,Angola,country
+AIA,Anguilla,territory
+ALB,Albania,country
+AND,Andorra,country
+ARE,United Arab Emirates,country
+ARG,Argentina,country
+ARM,Armenia,country
+ASM,American Samoa,territory
+ATA,Antarctica,territory
+ATG,Antigua and Barbuda,country
+AUS,Australia,country
+AUT,Austria,country
+AZE,Azerbaijan,country
+BDI,Burundi,country
+BEL,Belgium,country
+BEN,Benin,country
+BES,"Bonaire, Saint Eustatius and Saba",territory
+BFA,Burkina Faso,country
+BGD,Bangladesh,country
+BGR,Bulgaria,country
+BHR,Bahrain,country
+BHS,Bahamas,country
+BIH,Bosnia and Herzegovina,country
+BLM,Saint-Barthélemy,territory
+BLR,Belarus,country
+BLZ,Belize,country
+BMU,Bermuda,territory
+BOL,Bolivia (Plurinational State of),country
+BRA,Brazil,country
+BRB,Barbados,country
+BRN,Brunei Darussalam,country
+BTN,Bhutan,country
+BWA,Botswana,country
+CAF,Central African Republic,country
+CAN,Canada,country
+CHE,Switzerland,country
+CHL,Chile,country
+CHN,China,country
+CIV,Côte d'Ivoire,country
+CMR,Cameroon,country
+COD,Democratic Republic of the Congo,country
+COG,Congo,country
+COK,Cook Islands,territory
+COL,Colombia,country
+COM,Comoros,country
+CPV,Cabo Verde,country
+CRI,Costa Rica,country
+CUB,Cuba,country
+CUW,Curaçao,territory
+CXR,Christmas Island,territory
+CYM,Cayman Islands,territory
+CYP,Cyprus,country
+CZE,Czechia,country
+DEU,Germany,country
+DJI,Djibouti,country
+DMA,Dominica,country
+DNK,Denmark,country
+DOM,Dominican Republic,country
+DZA,Algeria,country
+ECU,Ecuador,country
+EGY,Egypt,country
+ERI,Eritrea,country
+ESH,Western Sahara,territory
+ESP,Spain,country
+EST,Estonia,country
+ETH,Ethiopia,country
+FIN,Finland,country
+FJI,Fiji,country
+FLK,Falkland Islands (Malvinas),territory
+FRA,France,country
+FRO,Faeroe Islands,territory
+FSM,Micronesia (Federated States of),country
+GAB,Gabon,country
+GBR,United Kingdom of Great Britain and Northern Ireland,country
+GEO,Georgia,country
+GHA,Ghana,country
+GIB,Gibraltar,territory
+GIN,Guinea,country
+GLP,Guadeloupe,territory
+GMB,Gambia,country
+GNB,Guinea-Bissau,country
+GNQ,Equatorial Guinea,country
+GRC,Greece,country
+GRD,Grenada,country
+GRL,Greenland,territory
+GTM,Guatemala,country
+GUF,French Guiana,territory
+GUM,Guam,territory
+GUY,Guyana,country
+HKG,"China, Hong Kong Special Administrative Region",territory
+HND,Honduras,country
+HRV,Croatia,country
+HTI,Haiti,country
+HUN,Hungary,country
+IDN,Indonesia,country
+IMN,Isle of Man,territory
+IND,India,country
+IRL,Ireland,country
+IRN,Iran (Islamic Republic of),country
+IRQ,Iraq,country
+ISL,Iceland,country
+ISR,Israel,country
+ITA,Italy,country
+JAM,Jamaica,country
+JOR,Jordan,country
+JPN,Japan,country
+KAZ,Kazakhstan,country
+KEN,Kenya,country
+KGZ,Kyrgyzstan,country
+KHM,Cambodia,country
+KIR,Kiribati,country
+KNA,Saint Kitts and Nevis,country
+KOR,Republic of Korea,country
+KSV,Kosovo,territory
+KWT,Kuwait,country
+LAO,Lao People's Democratic Republic,country
+LBN,Lebanon,country
+LBR,Liberia,country
+LBY,Libya,country
+LCA,Saint Lucia,country
+LIE,Liechtenstein,country
+LKA,Sri Lanka,country
+LSO,Lesotho,country
+LTU,Lithuania,country
+LUX,Luxembourg,country
+LVA,Latvia,country
+MAC,"China, Macao Special Administrative Region",territory
+MAF,Saint-Martin (French part),territory
+MAR,Morocco,country
+MCO,Monaco,country
+MDA,Republic of Moldova,country
+MDG,Madagascar,country
+MDV,Maldives,country
+MEX,Mexico,country
+MHL,Marshall Islands,country
+MKD,North Macedonia,country
+MLI,Mali,country
+MLT,Malta,country
+MMR,Myanmar,country
+MNE,Montenegro,country
+MNG,Mongolia,country
+MNP,Northern Mariana Islands,territory
+MOZ,Mozambique,country
+MRT,Mauritania,country
+MSR,Montserrat,territory
+MTQ,Martinique,territory
+MUS,Mauritius,country
+MWI,Malawi,country
+MYS,Malaysia,country
+MYT,Mayotte,territory
+NAM,Namibia,country
+NCL,New Caledonia,territory
+NER,Niger,country
+NGA,Nigeria,country
+NIC,Nicaragua,country
+NIU,Niue,territory
+NLD,Netherlands,country
+NOR,Norway,country
+NPL,Nepal,country
+NRU,Nauru,country
+NZL,New Zealand,country
+OMN,Oman,country
+PAK,Pakistan,country
+PAN,Panama,country
+PCZ,Panama Canal Zone,territory
+PER,Peru,country
+PHL,Philippines,country
+PLW,Palau,country
+PNG,Papua New Guinea,country
+POL,Poland,country
+PRI,Puerto Rico,territory
+PRK,Democratic People's Republic of Korea,country
+PRT,Portugal,country
+PRY,Paraguay,country
+PSE,Palestine,country
+PYF,French Polynesia,territory
+QAT,Qatar,country
+REU,Réunion,territory
+ROU,Romania,country
+RUS,Russian Federation,country
+RWA,Rwanda,country
+SAU,Saudi Arabia,country
+SDN,Sudan,country
+SEN,Senegal,country
+SGP,Singapore,country
+SHN,Saint Helena,territory
+SLB,Solomon Islands,country
+SLE,Sierra Leone,country
+SLV,El Salvador,country
+SMR,San Marino,country
+SOM,Somalia,country
+SPM,Saint Pierre and Miquelon,territory
+SRB,Serbia,country
+SSD,South Sudan,country
+STP,Sao Tome and Principe,country
+SUR,Suriname,country
+SVK,Slovakia,country
+SVN,Slovenia,country
+SWE,Sweden,country
+SWZ,Eswatini,country
+SXM,Sint Maarten (Dutch part),territory
+SYC,Seychelles,country
+SYR,Syrian Arab Republic,country
+TCA,Turks and Caicos Islands,territory
+TCD,Chad,country
+TGO,Togo,country
+THA,Thailand,country
+TJK,Tajikistan,country
+TKL,Tokelau,territory
+TKM,Turkmenistan,country
+TLS,Timor-Leste,country
+TON,Tonga,country
+TTO,Trinidad and Tobago,country
+TUN,Tunisia,country
+TUR,Türkiye,country
+TUV,Tuvalu,country
+TWN,Taiwan,territory
+TZA,United Republic of Tanzania,country
+UGA,Uganda,country
+UKR,Ukraine,country
+URY,Uruguay,country
+USA,United States of America,country
+UZB,Uzbekistan,country
+VAT,Holy See,country
+VCT,Saint Vincent and the Grenadines,country
+VEN,Venezuela (Bolivarian Republic of),country
+VGB,British Virgin Islands,territory
+VIR,United States Virgin Islands,territory
+VNM,Viet Nam,country
+VUT,Vanuatu,country
+WLD,Global,aggregate
+WLF,Wallis and Futuna Islands,territory
+WSM,Samoa,country
+XIT,International Transport,aggregate
+YEM,Yemen,country
+ZAF,South Africa,country
+ZMB,Zambia,country
+ZWE,Zimbabwe,country
+ZZA,Channel Islands,territory

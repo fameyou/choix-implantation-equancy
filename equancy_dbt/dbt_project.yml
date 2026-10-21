@@ -32,5 +32,8 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   equancy_dbt:
     # Config indicated by + and applies to all files under models/example/
-    staging:
+    staging: 
       +materialized: view 
+    marts:
+      +schema: marts
+      +materialized: table
