@@ -24,7 +24,7 @@ CSV (Python/pandas) -> PostgreSQL (schémas raw, staging, marts) -> dbt Core -> 
 - La période est l'année entière (entier), pas une date.
 - Le fichier patrimoine est exclu (113 doublons pays-année).
 - Entité "St. Kitts-Nevis-Anguilla" exclue du fichier émissions (code KNA partagé).
-- Fenêtre par question : a = 2000-2021, b = 2010-2018 (l'éducation s'effondre après 2018), c = 1950-2021 avec affichage récent.
+- Période d'étude commune aux trois questions : 2010-2021 (H21), appliquée dans les marts. Pour b, la corrélation repose en pratique sur 2010-2018 (l'éducation s'effondre après), limite annoncée. Les tables de faits gardent une période plus large : PIB et population 2000-2021, émissions 1950-2021.
 - Éducation approchée par la dépense publique d'éducation par habitant (limite à annoncer : mesure un effort, pas un niveau).
 - Unités déduites : PIB en dollars US, émissions en MtCO2, population en milliers, éducation en millions de dollars constants.
 - Une table de couverture (pays x variable) doit rendre visibles les pays absents.
