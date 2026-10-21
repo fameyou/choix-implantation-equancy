@@ -58,3 +58,24 @@ models:
             combination_of_columns:
               - country_code
               - year
+  - name: stg_country_table
+    description: "Référentiel des 168 pays (nom et code ISO alpha-3)."
+    columns:
+      - name: country_code
+        tests:
+          - not_null
+          - unique
+      - name: country_name
+        tests:
+          - not_null
+
+  - name: stg_table_date
+    description: "Calendrier annuel : un 1er janvier par année, de 1750 à 2045."
+    columns:
+      - name: year
+        tests:
+          - not_null
+          - unique
+      - name: date_day
+        tests:
+          - not_null
