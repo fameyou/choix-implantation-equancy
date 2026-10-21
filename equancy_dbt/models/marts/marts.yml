@@ -57,3 +57,230 @@ models:
       - dbt_utils.equal_rowcount:
           arguments:
             compare_model: ref('country_classification')
+
+  - name: fct_gdp
+    description: >
+      PIB annuel par pays et par année, 2000-2021, en dollars US courants
+      (nominaux). Une ligne par couple pays-année présent dans la source :
+      les années manquantes ne sont pas créées (pas d'imputation). Contient
+      les 193 pays souverains et 20 territoires ayant un PIB ; l'exclusion
+      des territoires se fait dans les marts via dim_country.is_ranked_country.
+    columns:
+      - name: country_code
+        description: "Code ISO alpha-3, clé étrangère vers dim_country."
+        tests:
+          - not_null
+          # Chaque ligne de faits a un pays connu : rien ne disparaît dans Power BI
+          - relationships:
+              arguments:
+                to: ref('dim_country')
+                field: country_code
+
+      - name: year
+        description: "Année civile (entier)."
+        tests:
+          - not_null
+          # La fenêtre de la question a (H21) est bien appliquée
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 2000
+                max_value: 2021
+
+      - name: gdp_usd
+        description: "PIB en dollars US courants (nominaux, H24), renommé depuis gdp_value du staging. Précision limitée à 3 chiffres significatifs sur 27 % des lignes (H10)."
+        tests:
+          - not_null
+          # Strictement positif, et plafond à 30 000 Md$ (États-Unis 2021 : 23 300 Md$)
+          # pour détecter une erreur d'unité
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 30000000000000
+                inclusive: false
+
+      - name: gdp_growth_yoy_pct
+        description: "Croissance nominale par rapport à l'année précédente, en %. NULL si l'année précédente est absente."
+
+      - name: is_gdp_series_break
+        description: "Vrai si le PIB est multiplié par plus de 2 ou divisé par plus de 2 en un an (rupture de série ou choc de change, H25)."
+        tests:
+          - not_null
+
+    tests:
+      # Grain : une seule ligne par pays et par année
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - country_code
+              - year
+      # Valeurs aberrantes : signalées à chaque exécution, sans bloquer (H25)
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "not is_gdp_series_break"
+          config:
+            severity: warn
+
+  - name: fct_population
+    description: >
+      Population annuelle par pays et par année, 2000-2021, en milliers
+      d'habitants (entiers). Une ligne par couple pays-année présent dans la
+      source : les années manquantes ne sont pas créées (H26). Séries
+      incomplètes notables : États-Unis (2000-2019), Japon (2012-2019),
+      Ukraine (2000-2013), France (2000-2020).
+    columns:
+      - name: country_code
+        description: "Code ISO alpha-3, clé étrangère vers dim_country."
+        tests:
+          - not_null
+          # Chaque ligne de faits a un pays connu
+          - relationships:
+              arguments:
+                to: ref('dim_country')
+                field: country_code
+
+      - name: year
+        description: "Année civile (entier)."
+        tests:
+          - not_null
+          # Fenêtre 2000-2021 appliquée : 2022 est bien exclue (H26)
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 2000
+                max_value: 2021
+
+      - name: population_thousands
+        description: "Population totale en milliers d'habitants, arrondie à l'entier (H27 : le Vatican vaut 1)."
+        tests:
+          - not_null
+          # Strictement positive, plafond à 2 milliards d'habitants
+          # (Chine 2021 : 1 444 216 milliers) pour détecter une erreur d'unité
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 2000000
+                inclusive: false
+
+    tests:
+      # Grain : une seule ligne par pays et par année
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - country_code
+              - year
+
+  - name: fct_emissions
+    description: >
+      Émissions de CO2 par entité et par année, 1950-2021 : total et sources en
+      MtCO2, valeur par habitant en tonnes (colonne fournie par la source, H19).
+      Exclut les 6 entités sans code et St. Kitts-Nevis-Anguilla (H11). Les
+      zéros de la source signalant une absence de mesure sont remis à NULL
+      (H28, 1 376 lignes ; aucun pays souverain touché sur 2010-2021). Vatican, Monaco et
+      Saint-Marin sont absents de la source.
+    columns:
+      - name: country_code
+        description: "Code ISO alpha-3, clé étrangère vers dim_country."
+        tests:
+          # Les entités sans code sont bien exclues (H11)
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_country')
+                field: country_code
+
+      - name: year
+        description: "Année civile (entier)."
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1950
+                max_value: 2021
+
+      - name: total_mtco2
+        description: "Émissions totales en MtCO2. NULL si absence de mesure (H28)."
+        tests:
+          # Aucun zéro résiduel ; plafond : Global 2021 = 37 124 MtCO2
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 50000
+                inclusive: false
+
+      - name: co2_tonnes_per_capita
+        description: "Émissions par habitant en tonnes de CO2, fournies par la source (H19). NULL si absence de mesure ou entité sans population."
+        tests:
+          # Aucun zéro résiduel ; plafond : Sint Maarten 1954 = 834 t (territoire)
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 1000
+                inclusive: false
+
+    tests:
+      # Grain : une ligne par entité et par année (prouve aussi l'exclusion du doublon KNA)
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - country_code
+              - year
+      # Aucune source négative (least ignore les NULL)
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "coalesce(least(coal_mtco2, oil_mtco2, gas_mtco2, cement_mtco2, flaring_mtco2, other_mtco2), 0) >= 0"
+      # Cohérence interne : total = somme des sources, à 1 % près
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: >
+              abs(total_mtco2 - (coalesce(coal_mtco2, 0) + coalesce(oil_mtco2, 0)
+              + coalesce(gas_mtco2, 0) + coalesce(cement_mtco2, 0)
+              + coalesce(flaring_mtco2, 0) + coalesce(other_mtco2, 0)))
+              <= 0.01 * greatest(total_mtco2, 1)
+          config:
+            where: "total_mtco2 is not null"
+
+  - name: fct_education
+    description: >
+      Dépenses publiques d'éducation par pays et par année, 2010-2021, en
+      millions de dollars US. Une ligne par observation : panel très incomplet
+      (106 à 120 pays souverains par année sur 2010-2018, puis 85, 34 et 26).
+      35 pays souverains n'ont aucune donnée, dont Chine, Nigeria, Égypte,
+      Maroc et Arabie saoudite (H30). Approximation du niveau d'éducation (H16).
+    columns:
+      - name: country_code
+        description: "Code ISO alpha-3, clé étrangère vers dim_country."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_country')
+                field: country_code
+
+      - name: year
+        description: "Année civile (entier)."
+        tests:
+          - not_null
+          # Fenêtre 2010-2021 appliquée : 2022 (une ligne vide) est exclue
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 2010
+                max_value: 2021
+
+      - name: education_expenditure_musd
+        description: "Dépense publique d'éducation en millions de dollars US (H16)."
+        tests:
+          # Les lignes sans valeur (Vatican) sont bien exclues
+          - not_null
+          # Strictement positive ; plafond : États-Unis = 1 042 411 M$
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 2000000
+                inclusive: false
+
+    tests:
+      # Grain : une seule ligne par pays et par année
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - country_code
+              - year
