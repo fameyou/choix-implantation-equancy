@@ -567,3 +567,59 @@ models:
       - dbt_utils.expression_is_true:
           arguments:
             expression: "(select count(*) from {{ ref('mart_co2_education_correlation') }}) = 10"
+
+  - name: mart_preselection
+    description: >
+      Synthèse des questions a, b et c et présélection de pays (H22) : une ligne
+      par pays souverain. Score = moyenne des percentiles (poids égaux) de la
+      croissance 2010-2021, de l'écart à la tendance éducation ~ CO2 et de la
+      faiblesse de l'empreinte carbone, parmi les pays présents sur les trois
+      critères. Présélection : les preselection_size premiers (5 par défaut).
+    columns:
+      - name: country_code
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_country')
+                field: country_code
+      - name: growth_percentile
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: education_percentile
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: footprint_percentile
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: education_vs_trend_ratio
+        description: "Dépense d'éducation observée / dépense prévue par la tendance éducation ~ CO2 (> 1 = au-dessus de la tendance)."
+      - name: missing_criteria
+        description: "Critères manquants qui empêchent le classement. NULL si le pays est complet."
+    tests:
+      # Seuls les pays complets sont classés
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "(composite_rank is not null) = is_complete"
+      # La raison d'exclusion est cohérente avec la complétude
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "(missing_criteria is null) = is_complete"
+      # Aucun pays incomplet n'est présélectionné
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "not is_preselected or is_complete"
+      # La présélection a exactement la taille demandée
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "(select count(*) from {{ ref('mart_preselection') }} where is_preselected) = {{ var('preselection_size', 5) }}"
