@@ -284,3 +284,60 @@ models:
             combination_of_columns:
               - country_code
               - year
+
+  - name: mart_data_coverage
+    description: >
+      Couverture des données par entité et par variable (H23) : 241 entités x
+      4 variables. Pour chaque couple, nombre d'années observées sur la période
+      de référence (2010-2021, ou 2010-2018 pour l'éducation), taux de
+      complétude, années manquantes et statut (Complète, Partielle, Absente).
+      Rend visibles les pays exclus d'un classement faute de données.
+    columns:
+      - name: country_code
+        description: "Code ISO alpha-3, clé étrangère vers dim_country."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_country')
+                field: country_code
+
+      - name: variable_code
+        description: "Variable suivie : gdp, population, co2_per_capita, education."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['gdp', 'population', 'co2_per_capita', 'education']
+
+      - name: nb_years_observed
+        description: "Nombre d'années avec une valeur sur la période de référence."
+        tests:
+          - not_null
+
+      - name: missing_years
+        description: "Années manquantes sur la période de référence. NULL si la série est complète."
+
+      - name: coverage_status
+        description: "Complète, Partielle ou Absente."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Complète', 'Partielle', 'Absente']
+
+    tests:
+      # Grain : une ligne par entité et par variable
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - country_code
+              - variable_code
+      # Aucune année comptée deux fois ni hors période
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "nb_years_observed between 0 and nb_years_expected"
+      # Statut cohérent avec les comptes
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "(coverage_status = 'Absente') = (nb_years_observed = 0)"
