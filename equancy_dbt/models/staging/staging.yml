@@ -7,6 +7,11 @@ models:
       - name: country_code
         tests:
           - not_null
+          # Contrôle 7 : le code existe dans la dimension pays
+          - relationships:
+              arguments:
+                to: ref('dim_country')
+                field: country_code
 
       - name: year
         tests:
@@ -27,6 +32,11 @@ models:
       - name: country_code
         tests:
           - not_null
+          # Contrôle 7 : le code existe dans la dimension pays
+          - relationships:
+              arguments:
+                to: ref('dim_country')
+                field: country_code
       - name: year
         tests:
           - not_null
@@ -46,6 +56,11 @@ models:
         tests:
           - not_null
           - unique
+          # Contrôle 7 : le code existe dans la dimension pays
+          - relationships:
+              arguments:
+                to: ref('dim_country')
+                field: country_code
       - name: country_name
         tests:
           - not_null
@@ -67,6 +82,11 @@ models:
       - name: country_code
         tests:
           - not_null
+          # Contrôle 7 : le code existe dans la dimension pays
+          - relationships:
+              arguments:
+                to: ref('dim_country')
+                field: country_code
       - name: indicator_code
         tests:
           - not_null
@@ -108,6 +128,13 @@ models:
   - name: stg_emissions_per_country
     description: "Émissions de CO2 par entité et par année (total, par source, par habitant). Contient des agrégats (Global, International Transport) et des entités sans code ISO."
     columns:
+      - name: country_code
+        tests:
+          # Contrôle 7 (les NULL des entités historiques sont ignorés, cf. H11)
+          - relationships:
+              arguments:
+                to: ref('dim_country')
+                field: country_code
       - name: country_name
         tests:
           - not_null
@@ -141,6 +168,11 @@ models:
       - name: country_code
         tests:
           - not_null
+          # Contrôle 7 : le code existe dans la dimension pays
+          - relationships:
+              arguments:
+                to: ref('dim_country')
+                field: country_code
       - name: year
         tests:
           - not_null
@@ -166,6 +198,11 @@ models:
       - name: country_code
         tests:
           - not_null
+          # Contrôle 7 : le code existe dans la dimension pays
+          - relationships:
+              arguments:
+                to: ref('dim_country')
+                field: country_code
       - name: year
         tests:
           - not_null

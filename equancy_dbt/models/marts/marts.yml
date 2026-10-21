@@ -1,0 +1,59 @@
+version: 2
+
+models:
+  - name: dim_country
+    description: >
+      Dimension pays : une ligne par code ISO alpha-3 (241 entités : 195 pays
+      souverains, 44 territoires, 2 agrégats). Construite à partir du seed
+      country_classification (hypothèses H1 à H5). Les territoires et les
+      agrégats sont gardés pour la traçabilité, mais exclus des classements
+      via is_ranked_country.
+    columns:
+      - name: country_code
+        description: "Code ISO alpha-3 (ou code technique pour WLD, XIT, KSV, PCZ, ZZA). Clé de jointure avec tous les faits (H4)."
+        tests:
+          # Contrôle 1 : aucun doublon, sinon les jointures doubleraient les lignes de faits
+          - unique
+          # Contrôle 3 : chaque entité a un code
+          - not_null
+
+      - name: country_name
+        description: "Nom de référence unique par code (H4 : 20 codes ont deux noms selon les fichiers)."
+        tests:
+          # Contrôle 3 : chaque entité a un nom affichable
+          - not_null
+          # Contrôle 2 : deux codes ne doivent pas partager un nom (alerte seulement)
+          - unique:
+              config:
+                severity: warn
+
+      - name: entity_type
+        description: "Type d'entité : country (État souverain), territory, aggregate (Global, International Transport)."
+        tests:
+          # Contrôle 3
+          - not_null
+          # Contrôle 4 : aucune valeur hors liste (faute de frappe dans le seed)
+          - accepted_values:
+              arguments:
+                values: ['country', 'territory', 'aggregate']
+
+      - name: entity_type_label
+        description: "Libellé français du type d'entité, pour les filtres du dashboard."
+        tests:
+          # Garantit que le CASE couvre toutes les valeurs de entity_type
+          - not_null
+
+      - name: is_ranked_country
+        description: "Vrai si l'entité est un État souverain et entre dans les classements (H1)."
+        tests:
+          - not_null
+
+    tests:
+      # Contrôle 5 : code de 3 lettres majuscules, sans espace
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "country_code ~ '^[A-Z]{3}$'"
+      # Contrôle 6 : aucune ligne perdue ni ajoutée par rapport au seed
+      - dbt_utils.equal_rowcount:
+          arguments:
+            compare_model: ref('country_classification')
