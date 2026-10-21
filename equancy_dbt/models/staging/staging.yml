@@ -152,3 +152,55 @@ models:
             combination_of_columns:
               - country_name
               - year
+
+  - name: stg_government_expenses_in_education
+    description: "Dépenses publiques d'éducation par pays et par année, en millions de dollars US constants. Panel incomplet : 1217 lignes pour 168 pays."
+    columns:
+      - name: country_code
+        tests:
+          - not_null
+      - name: year
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 2010
+                max_value: 2022
+      - name: education_expenditure_musd
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - country_code
+              - year
+
+  - name: stg_expenditure_in_preservation_conservation
+    description: "Dépenses de préservation du patrimoine par habitant (PPP$ constants 2017). ATTENTION : plusieurs valeurs par pays et par année, probablement une colonne de ventilation perdue à l'export. Non utilisé dans les analyses."
+    columns:
+      - name: country_code
+        tests:
+          - not_null
+      - name: year
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 2017
+                max_value: 2022
+      - name: heritage_expenditure_ppp_per_capita
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - country_code
+              - year
+          config:
+            severity: warn
