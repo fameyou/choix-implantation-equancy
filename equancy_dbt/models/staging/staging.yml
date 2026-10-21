@@ -19,3 +19,42 @@ models:
             combination_of_columns:
               - country_code
               - year
+
+models:
+  - name: stg_gdp_unesco
+    description: "PIB par pays et par année (source UNESCO), converti en nombre."
+    columns:
+      - name: country_code
+        tests:
+          - not_null
+      - name: year
+        tests:
+          - not_null
+      - name: gdp_value
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - country_code
+              - year
+
+  - name: stg_population_thousands
+    description: "Population totale par pays et par année, en milliers d'habitants."
+    columns:
+      - name: country_code
+        tests:
+          - not_null
+      - name: year
+        tests:
+          - not_null
+      - name: population_thousands
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - country_code
+              - year
