@@ -1,0 +1,23 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Tables brutes chargées depuis les CSV dans PostgreSQL."
+    schema: raw
+    tables:
+      - name: country_table
+        description: "Référentiel brut des pays (nom et code ISO alpha-3), 168 lignes."
+      - name: table_date
+        description: "Calendrier brut : un 1er janvier par année, de 1750 à 2045."
+      - name: population_thousands
+        description: "Population totale par pays et par année, en milliers d'habitants."
+      - name: gdp_unesco
+        description: "PIB par pays et par année (source UNESCO), valeurs en texte avec notation scientifique."
+      - name: demographic_indicators
+        description: "Espérance de vie à la naissance et part de la population rurale, par pays et par année."
+      - name: emissions_per_country
+        description: "Émissions de CO2 par entité et par année (total, par source d'énergie, par habitant)."
+      - name: government_expenses_in_education
+        description: "Dépenses publiques d'éducation par pays et par année, en millions de dollars constants."
+      - name: expenditure_in_preservation_conservation
+        description: "Dépenses de préservation du patrimoine par habitant. Plusieurs valeurs par pays et par année : fichier à utiliser avec précaution."
