@@ -530,7 +530,18 @@ models:
       - name: avg_co2_tonnes_per_capita
         tests:
           - not_null
+      - name: education_quartile
+        description: "Quartile de dépense d'éducation par habitant parmi les pays de la corrélation (1 = dépense la plus faible). NULL hors corrélation (H32)."
+        tests:
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4]
+                quote: false
     tests:
+      # Seuls les pays de la corrélation sont répartis en quartiles
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "(education_quartile is not null) = is_in_correlation"
       # L'éligibilité respecte le seuil d'années (3 par défaut)
       - dbt_utils.expression_is_true:
           arguments:
