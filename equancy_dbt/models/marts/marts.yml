@@ -241,7 +241,7 @@ models:
   - name: fct_education
     description: >
       Dépenses publiques d'éducation par pays et par année, 2010-2021, en
-      millions de dollars US. Une ligne par observation : panel très incomplet
+      millions de dollars US constants. Une ligne par observation : panel très incomplet
       (106 à 120 pays souverains par année sur 2010-2018, puis 85, 34 et 26).
       35 pays souverains n'ont aucune donnée, dont Chine, Nigeria, Égypte,
       Maroc et Arabie saoudite (H30). Approximation du niveau d'éducation (H16).
@@ -266,7 +266,7 @@ models:
                 max_value: 2021
 
       - name: education_expenditure_musd
-        description: "Dépense publique d'éducation en millions de dollars US (H16)."
+        description: "Dépense publique d'éducation en millions de dollars US constants (indiqué par la source, H16)."
         tests:
           # Les lignes sans valeur (Vatican) sont bien exclues
           - not_null

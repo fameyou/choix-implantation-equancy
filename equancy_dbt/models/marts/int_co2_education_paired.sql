@@ -8,9 +8,10 @@
 -- Partagé par mart_co2_education et mart_co2_education_correlation : la règle
 -- de rapprochement n'est écrite qu'une fois.
 -- Hypothèses appliquées :
---   H16 : éducation = dépense publique par habitant (dollars par habitant).
+--   H16 : éducation = dépense publique par habitant (dollars constants par habitant).
 --   H17 : fenêtre 2010-2018 (éducation presque vide ensuite).
---   H18 : PIB par habitant ajouté comme variable de contrôle (nominal, H24).
+--   H18 : PIB par habitant ajouté comme variable de contrôle (dollars courants,
+--         H24) ; bases monétaires différentes, sans effet notable sur des rangs.
 -- Règle NULL : pas de ligne sans population pour l'année (dépense par habitant
 -- non calculable, H30). Le PIB par habitant peut être NULL.
 -- =============================================================================

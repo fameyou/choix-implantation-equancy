@@ -3,7 +3,8 @@
 -- Grain : une ligne par pays et par année avec une dépense observée,
 --         2010-2021 (country_code x year).
 -- Source : stg_government_expenses_in_education.
--- Unité : millions de dollars US (ordre de grandeur vérifié : 4 à 6 % du PIB).
+-- Unité : millions de dollars US constants, indiquée par la source (colonne
+-- indicator) ; ordre de grandeur cohérent : 4 à 6 % du PIB.
 -- Hypothèses appliquées :
 --   H16 : la dépense publique d'éducation sert d'approximation du niveau
 --         d'éducation (mesure un effort, pas un résultat).
