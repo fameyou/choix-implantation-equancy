@@ -537,11 +537,28 @@ models:
               arguments:
                 values: [1, 2, 3, 4]
                 quote: false
+      - name: co2_quartile
+        description: "Quartile de CO2 par habitant parmi les pays de la corrélation (1 = émissions les plus faibles). Croisé avec education_quartile pour la carte de chaleur. NULL hors corrélation (H33)."
+        tests:
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4]
+                quote: false
     tests:
       # Seuls les pays de la corrélation sont répartis en quartiles
       - dbt_utils.expression_is_true:
           arguments:
             expression: "(education_quartile is not null) = is_in_correlation"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "(co2_quartile is not null) = is_in_correlation"
+      # Quartiles équilibrés : 136 pays / 4 = 34 par groupe, au plus 1 d'écart
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: >
+              (select max(n) - min(n) from (select count(*) as n
+              from {{ ref('mart_co2_education') }} where is_in_correlation
+              group by co2_quartile) as groupes) <= 1
       # L'éligibilité respecte le seuil d'années (3 par défaut)
       - dbt_utils.expression_is_true:
           arguments:
