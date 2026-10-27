@@ -326,7 +326,28 @@ models:
               arguments:
                 values: ['Complète', 'Partielle', 'Absente']
 
+      - name: coverage_status_sort
+        description: "Ordre d'affichage du statut (1 = Complète, 2 = Partielle, 3 = Absente), pour le « Trier par colonne » de Power BI."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3]
+                quote: false
+
+      - name: variable_sort
+        description: "Ordre d'affichage des variables (1 = CO2 par habitant … 4 = éducation)."
+        tests:
+          - not_null
+
     tests:
+      # L'ordre de tri correspond exactement au statut (une seule valeur par statut)
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: >
+              (coverage_status = 'Complète' and coverage_status_sort = 1)
+              or (coverage_status = 'Partielle' and coverage_status_sort = 2)
+              or (coverage_status = 'Absente' and coverage_status_sort = 3)
       # Grain : une ligne par entité et par variable
       - dbt_utils.unique_combination_of_columns:
           arguments:

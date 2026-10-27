@@ -12,16 +12,17 @@
 
 with
 
--- Étape 1 : référentiel des variables suivies et de leur période de référence.
+-- Étape 1 : référentiel des variables suivies, de leur période de référence
+-- et de leur ordre d'affichage dans le dashboard (variable_sort).
 variables as (
     select *
     from (
         values
-            ('gdp',            'PIB',                            2010, 2021),
-            ('population',     'Population',                     2010, 2021),
-            ('co2_per_capita', 'Émissions de CO2 par habitant',  2010, 2021),
-            ('education',      'Dépense publique d''éducation',  2010, 2018)
-    ) as v (variable_code, variable_label, reference_start_year, reference_end_year)
+            ('co2_per_capita', 'Émissions de CO2 par habitant',  2010, 2021, 1),
+            ('gdp',            'PIB',                            2010, 2021, 2),
+            ('population',     'Population',                     2010, 2021, 3),
+            ('education',      'Dépense publique d''éducation',  2010, 2018, 4)
+    ) as v (variable_code, variable_label, reference_start_year, reference_end_year, variable_sort)
 ),
 
 -- Étape 2 : années attendues pour chaque variable (une ligne par année).
@@ -96,12 +97,15 @@ coverage_by_country_variable as (
     group by country_code, variable_code
 ),
 
--- Étape 7 : indicateurs d'affichage (taux et statut).
+-- Étape 7 : indicateurs d'affichage (taux, statut et ordres de tri).
+-- Les ordres de tri sont fournis par le mart : Power BI ne peut pas trier une
+-- colonne par une colonne calculée qui dépend d'elle (dépendance circulaire).
 final as (
     select
         c.country_code,
         c.variable_code,
         v.variable_label,
+        v.variable_sort,
         v.reference_start_year,
         v.reference_end_year,
         c.nb_years_expected,
@@ -114,7 +118,13 @@ final as (
             when c.nb_years_observed = c.nb_years_expected then 'Complète'
             when c.nb_years_observed = 0                   then 'Absente'
             else 'Partielle'
-        end as coverage_status
+        end as coverage_status,
+        -- Ordre de lecture : Complète (1), Partielle (2), Absente (3)
+        case
+            when c.nb_years_observed = c.nb_years_expected then 1
+            when c.nb_years_observed = 0                   then 3
+            else 2
+        end as coverage_status_sort
     from coverage_by_country_variable as c
     inner join variables as v
         on v.variable_code = c.variable_code
